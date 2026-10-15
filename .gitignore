@@ -1,0 +1,33 @@
+# --- secrets / env ---
+.env
+.env.*
+*.pem
+*.key
+terraform.tfvars
+kubeconfig*
+
+# --- python ---
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+*.egg-info/
+
+# --- node / vite ---
+node_modules/
+frontend/dist/
+.vite/
+
+# --- terraform ---
+.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+
+# --- os / editors ---
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
