@@ -1,0 +1,80 @@
+# Default values for the medidesk chart.
+
+nameOverride: ""
+fullnameOverride: ""
+
+backend:
+  replicaCount: 2
+  image:
+    repository: ghcr.io/rkawasthiii/medidesk-backend
+    tag: latest
+    pullPolicy: IfNotPresent
+  service:
+    type: ClusterIP
+    port: 80
+  # When empty, DATABASE_URL is assembled from the postgres.* values below.
+  # Set this to point at an external database (e.g. Amazon RDS) instead.
+  databaseUrl: ""
+  podAnnotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "8000"
+    prometheus.io/path: /metrics
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 256Mi
+
+frontend:
+  replicaCount: 2
+  image:
+    repository: ghcr.io/rkawasthiii/medidesk-frontend
+    tag: latest
+    pullPolicy: IfNotPresent
+  service:
+    type: ClusterIP
+    port: 80
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 250m
+      memory: 128Mi
+
+postgres:
+  enabled: true
+  image: postgres:16-alpine
+  auth:
+    user: medidesk
+    password: medidesk
+    database: medidesk
+  persistence:
+    size: 1Gi
+    storageClass: ""
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+ingress:
+  enabled: false
+  className: nginx
+  host: medidesk.local
+  annotations: {}
+
+hpa:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 6
+  targetCPUUtilization: 70
+
+# Requires the Prometheus Operator CRDs (kube-prometheus-stack).
+serviceMonitor:
+  enabled: false
+  interval: 15s

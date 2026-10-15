@@ -1,0 +1,7 @@
+# Dev/local overrides — enables Ingress for hosts like medidesk.local.
+#   helm upgrade --install medidesk ./helm/medidesk -n medidesk -f helm/medidesk/values-dev.yaml
+
+ingress:
+  enabled: true
+  className: nginx
+  host: medidesk.local

@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: medidesk
+  labels:
+    app.kubernetes.io/name: medidesk
+    environment: dev

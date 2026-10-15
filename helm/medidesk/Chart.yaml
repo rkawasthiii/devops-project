@@ -1,0 +1,12 @@
+apiVersion: v2
+name: medidesk
+description: >-
+  MediDesk — clinic appointment management platform.
+  Deploys the React/Nginx frontend, FastAPI backend and an in-cluster
+  PostgreSQL instance with optional Ingress, HPA and ServiceMonitor.
+type: application
+version: 1.0.0
+appVersion: "1.0.0"
+maintainers:
+  - name: Radhey Krishna Awasthi
+    email: radhey.24bcs10242@sst.scaler.com

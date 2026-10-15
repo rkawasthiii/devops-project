@@ -1,0 +1,23 @@
+MediDesk ({{ .Release.Name }}) installed in namespace {{ .Release.Namespace }}.
+
+Check the rollout:
+  kubectl get pods -n {{ .Release.Namespace }} -w
+  kubectl get svc  -n {{ .Release.Namespace }}
+
+Reach the app quickly with port-forward:
+  kubectl port-forward svc/{{ include "medidesk.fullname" . }}-frontend 3000:80 -n {{ .Release.Namespace }}
+  # open http://localhost:3000
+
+API docs:
+  kubectl port-forward svc/{{ include "medidesk.fullname" . }}-backend 8000:80 -n {{ .Release.Namespace }}
+  # open http://localhost:8000/docs
+
+{{- if .Values.ingress.enabled }}
+Ingress is enabled — browse to http://{{ .Values.ingress.host }}
+(add "{{ .Values.ingress.host }}" to your hosts file when testing locally).
+{{- end }}
+
+{{- if .Values.hpa.enabled }}
+HPA is managing backend replicas ({{ .Values.hpa.minReplicas }}..{{ .Values.hpa.maxReplicas }} @ {{ .Values.hpa.targetCPUUtilization }}% CPU):
+  kubectl get hpa -n {{ .Release.Namespace }}
+{{- end }}
