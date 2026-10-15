@@ -82,7 +82,7 @@ jobs:
           cache-to: type=gha,mode=max,scope=backend
 
       - name: Trivy scan — backend (fails on HIGH/CRITICAL)
-        uses: aquasecurity/trivy-action@0.28.0
+        uses: aquasecurity/trivy-action@0.35.0
         with:
           image-ref: ${{ env.BACKEND_IMAGE }}:${{ github.sha }}
           format: table
@@ -107,7 +107,7 @@ jobs:
           cache-to: type=gha,mode=max,scope=frontend
 
       - name: Trivy scan — frontend (fails on HIGH/CRITICAL)
-        uses: aquasecurity/trivy-action@0.28.0
+        uses: aquasecurity/trivy-action@0.35.0
         with:
           image-ref: ${{ env.FRONTEND_IMAGE }}:${{ github.sha }}
           format: table
