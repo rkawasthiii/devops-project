@@ -8,7 +8,7 @@ COPY . .
 RUN npm run build
 
 # ---------- runtime stage (unprivileged nginx, uid 101) ----------
-FROM nginxinc/nginx-unprivileged:1.27-alpine
+FROM nginxinc/nginx-unprivileged:1.31.7-alpine3.24
 
 # Backend address is injected at container start via envsubst on the template.
 ENV BACKEND_URL=http://backend:8000
