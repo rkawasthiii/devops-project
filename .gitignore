@@ -31,3 +31,6 @@ crash.log
 Thumbs.db
 .idea/
 .vscode/
+
+# --- local evidence capture logs (rendered PNGs live in docs/screenshots/) ---
+.cap/

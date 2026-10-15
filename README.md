@@ -67,7 +67,7 @@ Terraform ──▶ AWS VPC + EKS ◀───────────┘
 ├── monitoring/         Prometheus & Grafana Helm values + dashboard ConfigMap
 ├── troubleshooting/    deliberately-broken manifests + walkthrough
 ├── scripts/            HPA load generator (bash + PowerShell)
-└── docs/               presentation demo script
+└── docs/               presentation demo script + grading evidence (docs/screenshots/)
 ```
 
 ---
@@ -256,6 +256,15 @@ endpoints) — with a written walkthrough of `describe`, `events`,
 
 `docs/demo-script.md` is a minute-by-minute walkthrough: commit → pipeline →
 Trivy → GHCR → Helm release → Ingress → HPA → Grafana → break-and-fix.
+
+## 11. Grading evidence
+
+`docs/screenshots/` contains captured proof for every rubric module — the
+running UI, pytest, Compose, the green CI run, GHCR packages, Trivy results,
+Terraform validation, a real `kind` cluster running the Helm release (pods,
+Services, Ingress, PVC, **HPA scaling 2→6 under load**), and
+Prometheus/Grafana monitoring. See `docs/screenshots/README.md` for the
+index mapping each capture to a rubric module.
 
 ---
 
