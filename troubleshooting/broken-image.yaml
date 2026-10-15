@@ -1,0 +1,23 @@
+# Deliberately broken: the image tag `does-not-exist` is never published.
+# Apply it, watch the Pod, and practice the ImagePullBackOff workflow.
+#   kubectl apply -f troubleshooting/broken-image.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: medidesk-backend-broken
+  namespace: medidesk
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: medidesk-backend-broken
+  template:
+    metadata:
+      labels:
+        app: medidesk-backend-broken
+    spec:
+      containers:
+        - name: backend
+          image: ghcr.io/rkawasthiii/medidesk-backend:does-not-exist
+          ports:
+            - containerPort: 8000

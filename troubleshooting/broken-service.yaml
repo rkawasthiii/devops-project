@@ -1,0 +1,14 @@
+# Deliberately broken: the selector `component: backendd` (typo) matches no
+# Pods, so the Service never gets endpoints and traffic blackholes.
+#   kubectl apply -f troubleshooting/broken-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: medidesk-backend-unreachable
+  namespace: medidesk
+spec:
+  selector:
+    app.kubernetes.io/component: backendd   # <- BUG: label does not exist
+  ports:
+    - port: 80
+      targetPort: 8000
