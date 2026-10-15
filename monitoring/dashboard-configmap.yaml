@@ -1,0 +1,113 @@
+# Grafana dashboard for the MediDesk API, auto-loaded by the Grafana
+# sidecar (label grafana_dashboard=1).
+#   kubectl apply -f monitoring/dashboard-configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: medidesk-dashboard
+  namespace: monitoring
+  labels:
+    grafana_dashboard: "1"
+data:
+  medidesk-dashboard.json: |-
+    {
+      "uid": "medidesk-api",
+      "title": "MediDesk — API Overview",
+      "timezone": "browser",
+      "schemaVersion": 39,
+      "version": 1,
+      "refresh": "10s",
+      "time": { "from": "now-1h", "to": "now" },
+      "panels": [
+        {
+          "id": 1,
+          "type": "stat",
+          "title": "Requests / sec",
+          "gridPos": { "x": 0, "y": 0, "w": 6, "h": 4 },
+          "targets": [
+            {
+              "expr": "sum(rate(http_requests_total{job=\"medidesk-backend\"}[1m]))",
+              "datasource": { "type": "prometheus" }
+            }
+          ],
+          "fieldConfig": { "defaults": { "unit": "reqps" }, "overrides": [] }
+        },
+        {
+          "id": 2,
+          "type": "stat",
+          "title": "p95 latency",
+          "gridPos": { "x": 6, "y": 0, "w": 6, "h": 4 },
+          "targets": [
+            {
+              "expr": "histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket{job=\"medidesk-backend\"}[5m])) by (le))",
+              "datasource": { "type": "prometheus" }
+            }
+          ],
+          "fieldConfig": { "defaults": { "unit": "s" }, "overrides": [] }
+        },
+        {
+          "id": 3,
+          "type": "stat",
+          "title": "5xx errors / sec",
+          "gridPos": { "x": 12, "y": 0, "w": 6, "h": 4 },
+          "targets": [
+            {
+              "expr": "sum(rate(http_requests_total{job=\"medidesk-backend\",status=~\"5..\"}[1m]))",
+              "datasource": { "type": "prometheus" }
+            }
+          ],
+          "fieldConfig": { "defaults": { "unit": "reqps" }, "overrides": [] }
+        },
+        {
+          "id": 4,
+          "type": "stat",
+          "title": "In-flight requests",
+          "gridPos": { "x": 18, "y": 0, "w": 6, "h": 4 },
+          "targets": [
+            {
+              "expr": "sum(http_requests_in_progress{job=\"medidesk-backend\"})",
+              "datasource": { "type": "prometheus" }
+            }
+          ],
+          "fieldConfig": { "defaults": {}, "overrides": [] }
+        },
+        {
+          "id": 5,
+          "type": "timeseries",
+          "title": "Request rate by handler",
+          "gridPos": { "x": 0, "y": 4, "w": 12, "h": 9 },
+          "targets": [
+            {
+              "expr": "sum by (handler) (rate(http_requests_total{job=\"medidesk-backend\"}[1m]))",
+              "legendFormat": "{{handler}}",
+              "datasource": { "type": "prometheus" }
+            }
+          ],
+          "fieldConfig": { "defaults": { "unit": "reqps" }, "overrides": [] }
+        },
+        {
+          "id": 6,
+          "type": "timeseries",
+          "title": "Request latency (p50 / p95 / p99)",
+          "gridPos": { "x": 12, "y": 4, "w": 12, "h": 9 },
+          "targets": [
+            {
+              "expr": "histogram_quantile(0.50, sum(rate(http_request_duration_seconds_bucket{job=\"medidesk-backend\"}[5m])) by (le))",
+              "legendFormat": "p50",
+              "datasource": { "type": "prometheus" }
+            },
+            {
+              "expr": "histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket{job=\"medidesk-backend\"}[5m])) by (le))",
+              "legendFormat": "p95",
+              "datasource": { "type": "prometheus" }
+            },
+            {
+              "expr": "histogram_quantile(0.99, sum(rate(http_request_duration_seconds_bucket{job=\"medidesk-backend\"}[5m])) by (le))",
+              "legendFormat": "p99",
+              "datasource": { "type": "prometheus" }
+            }
+          ],
+          "fieldConfig": { "defaults": { "unit": "s" }, "overrides": [] }
+        }
+      ]
+    }

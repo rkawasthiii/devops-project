@@ -1,0 +1,38 @@
+# Values for the prometheus-community/prometheus Helm chart:
+#   helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+#   helm install prometheus prometheus-community/prometheus \
+#     -n monitoring --create-namespace -f monitoring/prometheus-values.yaml
+
+server:
+  persistentVolume:
+    enabled: false   # demo cluster — no need for durable TSDB storage
+  retention: 7d
+  service:
+    type: ClusterIP
+
+# Keep the install light for a classroom cluster.
+alertmanager:
+  enabled: false
+prometheus-pushgateway:
+  enabled: false
+prometheus-node-exporter:
+  enabled: false
+
+# Scrape the MediDesk backend's /metrics endpoint through Kubernetes
+# endpoints discovery — only the *-backend Service in the medidesk namespace.
+extraScrapeConfigs:
+  - job_name: medidesk-backend
+    metrics_path: /metrics
+    scrape_interval: 15s
+    kubernetes_sd_configs:
+      - role: endpoints
+        namespaces:
+          names:
+            - medidesk
+    relabel_configs:
+      - source_labels: [__meta_kubernetes_service_name]
+        regex: .*-backend
+        action: keep
+      - source_labels: [__meta_kubernetes_endpoint_port_name]
+        regex: http
+        action: keep
