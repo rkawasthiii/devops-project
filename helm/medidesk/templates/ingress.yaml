@@ -15,7 +15,7 @@ spec:
     - host: {{ .Values.ingress.host | quote }}
       http:
         paths:
-          {{- range list "/api" "/health" "/ready" "/metrics" "/docs" "/openapi.json" }}
+          {{- range list "/api" "/health" "/ready" "/metrics" "/docs" }}
           - path: {{ . }}
             pathType: Prefix
             backend:
@@ -24,6 +24,13 @@ spec:
                 port:
                   number: {{ $.Values.backend.service.port }}
           {{- end }}
+          - path: /openapi.json
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: {{ include "medidesk.fullname" $ }}-backend
+                port:
+                  number: {{ $.Values.backend.service.port }}
           - path: /
             pathType: Prefix
             backend:

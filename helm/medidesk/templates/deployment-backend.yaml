@@ -55,6 +55,12 @@ spec:
               {{- else }}
               value: "postgresql+psycopg://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@{{ include "medidesk.fullname" . }}-postgres:5432/$(POSTGRES_DB)"
               {{- end }}
+          startupProbe:
+            httpGet:
+              path: /health
+              port: http
+            periodSeconds: 5
+            failureThreshold: 36
           readinessProbe:
             httpGet:
               path: /ready
